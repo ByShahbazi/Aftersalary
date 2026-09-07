@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.aftersalary.aftersalary"
-    compileSdk = 35
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -27,6 +27,7 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+
 
     buildTypes {
         release {

@@ -233,26 +233,95 @@ class SettingsScreen extends ConsumerWidget {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('خروجی نسخه پشتیبان (JSON)'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Row(
+            children: const [
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Color(0xFFE8F5E9),
+                child: Icon(Icons.cloud_download_outlined, color: Colors.green, size: 20),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'خروجی گرفتن از تمام اطلاعات',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+            ],
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('متن پشتیبان تولید شد. می‌توانید آن را کپی و در محلی امن نگهداری کنید:'),
-                const SizedBox(height: 10),
+                // بخش توضیحات
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade200),
                   ),
-                  constraints: const BoxConstraints(maxHeight: 200),
-                  child: SingleChildScrollView(
-                    child: SelectableText(
-                      jsonStr,
-                      style: const TextStyle(fontSize: 10, fontFamily: 'monospace'),
-                    ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.blue.shade700, size: 20),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: Text(
+                          'نسخه کامل پشتیبان شامل حساب‌ها و کارت‌های بانکی، تراکنش‌ها، تعهدات مالی و دسته‌بندی‌ها با موفقیت تولید شد.',
+                          style: TextStyle(fontSize: 12, height: 1.5, color: Colors.black87),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // نحوه استفاده
+                const Text(
+                  'راهنمای استفاده و نگهداری:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
+                const SizedBox(height: 10),
+                _buildExportGuideStep(
+                  stepNumber: '۱',
+                  title: 'کپی کردن اطلاعات',
+                  description: 'با لمس دکمه «کپی کردن اطلاعات» زیر، کل داده‌های برنامه در حافظه دستگاه ذخیره می‌شود.',
+                ),
+                const SizedBox(height: 8),
+                _buildExportGuideStep(
+                  stepNumber: '۲',
+                  title: 'ذخیره در جای مطمئن',
+                  description: 'متن کپی‌شده را در پیام‌های ذخیره‌شده (Saved Messages)، یادداشت‌های گوشی، ایمیل یا یک پیام‌رسان امن الصاق (Paste) و ذخیره کنید.',
+                ),
+                const SizedBox(height: 8),
+                _buildExportGuideStep(
+                  stepNumber: '۳',
+                  title: 'بازیابی در آینده',
+                  description: 'در دستگاه دیگر یا پس از نصب مجدد، از بخش «بازیابی اطلاعات»، با الصاق همین متن، تمام سوابق فوراً بازیابی می‌شوند.',
+                ),
+                const SizedBox(height: 14),
+
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.amber.shade300),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.shield_outlined, size: 18, color: Colors.amber.shade900),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: Text(
+                          'تمام داده‌ها کاملاً آفلاین هستند و نگهداری این نسخه پشتیبان امنیت اطلاعات شما را تضمین می‌کند.',
+                          style: TextStyle(fontSize: 11, color: Colors.black87),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -260,23 +329,65 @@ class SettingsScreen extends ConsumerWidget {
           ),
           actions: [
             TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('انصراف'),
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.copy_rounded, size: 18),
+              label: const Text('کپی کردن اطلاعات'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
               onPressed: () {
                 Clipboard.setData(ClipboardData(text: jsonStr));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('کد پشتیبان در کلیپ‌بورد کپی شد.')),
-                );
                 Navigator.pop(ctx);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('اطلاعات پشتیبان با موفقیت در کلیپ‌بورد کپی شد. اکنون آن را در محلی امن ذخیره کنید.'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
               },
-              child: const Text('کپی کردن کد'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('بستن'),
             ),
           ],
         ),
       );
     }
+  }
+
+  static Widget _buildExportGuideStep({
+    required String stepNumber,
+    required String title,
+    required String description,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CircleAvatar(
+          radius: 10,
+          backgroundColor: AppColors.primary.withAlpha(30),
+          child: Text(
+            stepNumber,
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primary),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: const TextStyle(fontSize: 12, height: 1.4, color: Colors.black87),
+              children: [
+                TextSpan(text: '$title: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: description),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Future<void> _importData(BuildContext context, WidgetRef ref) async {
@@ -559,9 +670,14 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  backgroundColor: AppColors.primary.withAlpha(25),
-                  child: const Icon(Icons.shield_outlined, color: AppColors.primary),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    'assets/images/logo_small.png',
+                    width: 44,
+                    height: 44,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 const SizedBox(width: 10),
                 const Column(

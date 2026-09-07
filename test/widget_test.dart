@@ -8,6 +8,7 @@ import 'package:aftersalary/core/services/sms_parser_service.dart';
 import 'package:aftersalary/core/utils/currency_formatter.dart';
 import 'package:aftersalary/core/utils/jalali_helper.dart';
 import 'package:aftersalary/core/widgets/currency_input_field.dart';
+import 'package:aftersalary/features/accounts/accounts_screen.dart';
 import 'package:aftersalary/features/settings/settings_screen.dart';
 import 'package:aftersalary/main.dart';
 import 'package:flutter/material.dart';
@@ -789,6 +790,74 @@ void main() {
       expect(find.text('mmshahbazi85@gmail.com'), findsOneWidget);
       expect(find.text('@ByShahbazi'), findsOneWidget);
       expect(find.text('mmshahbazi'), findsOneWidget);
+
+      await db.close();
+    });
+
+    testWidgets('AccountsScreen displays bank, cardholder name, balance, and free balance status in 4 lines', (tester) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      final bank = await db.getOrCreateBankByName('بلو بانک', '#1E56A0');
+      await db.addAccount(AccountsCompanion.insert(
+        bankId: bank.id,
+        title: 'حساب روزمره',
+        ownerName: const drift.Value('محمد شهبازی'),
+        accountNumber: const drift.Value('6219861012345678'),
+        currentBalanceRial: const drift.Value(25000000),
+        includeInFreeBalance: const drift.Value(true),
+      ));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            databaseProvider.overrideWithValue(db),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(
+              body: AccountsScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('بانک صادر کننده: '), findsOneWidget);
+      expect(find.text('بلو بانک'), findsOneWidget);
+      expect(find.text('نام دارنده کارت: '), findsOneWidget);
+      expect(find.text('محمد شهبازی'), findsOneWidget);
+      expect(find.text('موجودی: '), findsOneWidget);
+      expect(find.text('۲,۵۰۰,۰۰۰ تومان'), findsOneWidget);
+      expect(find.text('مشمول آزاد: '), findsOneWidget);
+      expect(find.text('مشمول در موجودی آزاد'), findsOneWidget);
+
+      await db.close();
+    });
+
+    testWidgets('SettingsScreen export modal shows guide and copy button without raw preview container', (tester) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            databaseProvider.overrideWithValue(db),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(
+              body: SettingsScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final exportTile = find.text('خروجی گرفتن از تمام اطلاعات (Export JSON)');
+      await tester.scrollUntilVisible(exportTile, 500);
+      await tester.pumpAndSettle();
+      await tester.tap(exportTile);
+      await tester.pumpAndSettle();
+
+      expect(find.text('خروجی گرفتن از تمام اطلاعات'), findsOneWidget);
+      expect(find.text('راهنمای استفاده و نگهداری:'), findsOneWidget);
+      expect(find.text('کپی کردن اطلاعات'), findsOneWidget);
+      expect(find.byType(SelectableText), findsNothing);
 
       await db.close();
     });
