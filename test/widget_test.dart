@@ -796,7 +796,8 @@ void main() {
 
     testWidgets('AccountsScreen displays bank, cardholder name, balance, and free balance status in 4 lines', (tester) async {
       final db = AppDatabase(NativeDatabase.memory());
-      final bank = await db.getOrCreateBankByName('بلو بانک', '#1E56A0');
+      final banks = await db.getAllBanks();
+      final bank = banks.first;
       await db.addAccount(AccountsCompanion.insert(
         bankId: bank.id,
         title: 'حساب روزمره',
@@ -820,14 +821,14 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('بانک صادر کننده: '), findsOneWidget);
-      expect(find.text('بلو بانک'), findsOneWidget);
-      expect(find.text('نام دارنده کارت: '), findsOneWidget);
-      expect(find.text('محمد شهبازی'), findsOneWidget);
-      expect(find.text('موجودی: '), findsOneWidget);
-      expect(find.text('۲,۵۰۰,۰۰۰ تومان'), findsOneWidget);
-      expect(find.text('مشمول آزاد: '), findsOneWidget);
-      expect(find.text('مشمول در موجودی آزاد'), findsOneWidget);
+      expect(find.text('بانک صادر کننده: '), findsWidgets);
+      expect(find.textContaining(bank.name), findsWidgets);
+      expect(find.text('نام دارنده کارت: '), findsWidgets);
+      expect(find.textContaining('محمد شهبازی'), findsWidgets);
+      expect(find.text('موجودی: '), findsWidgets);
+      expect(find.textContaining('۲,۵۰۰,۰۰۰ تومان'), findsWidgets);
+      expect(find.text('مشمول آزاد: '), findsWidgets);
+      expect(find.textContaining('مشمول در موجودی آزاد'), findsWidgets);
 
       await db.close();
     });

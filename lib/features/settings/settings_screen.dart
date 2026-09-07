@@ -285,19 +285,19 @@ class SettingsScreen extends ConsumerWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                 ),
                 const SizedBox(height: 10),
-                _buildExportGuideStep(
+                buildExportGuideStep(
                   stepNumber: '۱',
                   title: 'کپی کردن اطلاعات',
                   description: 'با لمس دکمه «کپی کردن اطلاعات» زیر، کل داده‌های برنامه در حافظه دستگاه ذخیره می‌شود.',
                 ),
                 const SizedBox(height: 8),
-                _buildExportGuideStep(
+                buildExportGuideStep(
                   stepNumber: '۲',
                   title: 'ذخیره در جای مطمئن',
                   description: 'متن کپی‌شده را در پیام‌های ذخیره‌شده (Saved Messages)، یادداشت‌های گوشی، ایمیل یا یک پیام‌رسان امن الصاق (Paste) و ذخیره کنید.',
                 ),
                 const SizedBox(height: 8),
-                _buildExportGuideStep(
+                buildExportGuideStep(
                   stepNumber: '۳',
                   title: 'بازیابی در آینده',
                   description: 'در دستگاه دیگر یا پس از نصب مجدد، از بخش «بازیابی اطلاعات»، با الصاق همین متن، تمام سوابق فوراً بازیابی می‌شوند.',
@@ -327,6 +327,8 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
           ),
+          actionsOverflowButtonSpacing: 8,
+          actionsAlignment: MainAxisAlignment.end,
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
@@ -358,7 +360,7 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  static Widget _buildExportGuideStep({
+  static Widget buildExportGuideStep({
     required String stepNumber,
     required String title,
     required String description,
@@ -680,18 +682,21 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'درباره نرم‌افزار Aftersalary',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-                    Text(
-                      'نگارش ۱.۰.۰ پایدار (Production Release)',
-                      style: TextStyle(fontSize: 11, color: Colors.grey),
-                    ),
-                  ],
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'درباره نرم‌افزار Aftersalary',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      Text(
+                        'نگارش ۱.۰.۰ پایدار (Production Release)',
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
