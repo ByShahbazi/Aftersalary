@@ -134,41 +134,15 @@ class SettingsScreen extends ConsumerWidget {
 
           const SizedBox(height: 24),
 
-          // درباره اپلیکیشن
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: AppColors.primary.withAlpha(25),
-                        child: const Icon(Icons.shield_outlined, color: AppColors.primary),
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        'درباره Aftersalary',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'این برنامه به صورت ۱۰۰٪ آفلاین (Local-first) کار می‌کند. کلیه داده‌ها در حافظه اختصاصی دستگاه شما ذخیره شده و هیچ حسابی به اینترنت منتقل نمی‌شود.',
-                    style: TextStyle(fontSize: 12, height: 1.5),
-                  ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'فرمول موجودی آزاد: موجودی کل حساب‌ها منهای تعهدات در انتظار تا پایان دوره مالی جاری.',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primary),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // درباره نرم‌افزار
+          _buildSectionHeader(context, 'درباره نرم‌افزار Aftersalary', Icons.info_outline),
+          _buildAppAboutCard(context),
+
+          const SizedBox(height: 20),
+
+          // درباره توسعه‌دهنده (در بخش انتهایی)
+          _buildSectionHeader(context, 'درباره توسعه‌دهنده', Icons.person_outline),
+          _buildDeveloperCard(context),
           const SizedBox(height: 40),
         ],
       ),
@@ -456,5 +430,185 @@ class SettingsScreen extends ConsumerWidget {
         );
       }
     }
+  }
+
+  Widget _buildDeveloperCard(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 24,
+                  backgroundColor: AppColors.primary.withAlpha(25),
+                  child: const Icon(Icons.person_outline_rounded, color: AppColors.primary, size: 26),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'محمد مهدی شهبازی',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'مهندسی نرم‌افزار و مهندس تضمین کیفیت نرم‌افزار',
+                        style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            const Divider(height: 1),
+            const SizedBox(height: 10),
+            const Text(
+              'راه‌های ارتباطی:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+            ),
+            const SizedBox(height: 8),
+            _buildContactRow(
+              context: context,
+              icon: Icons.email_outlined,
+              label: 'ایمیل:',
+              value: 'mmshahbazi85@gmail.com',
+              copyText: 'mmshahbazi85@gmail.com',
+            ),
+            const SizedBox(height: 6),
+            _buildContactRow(
+              context: context,
+              icon: Icons.send_rounded,
+              label: 'تلگرام:',
+              value: '@ByShahbazi',
+              copyText: '@ByShahbazi',
+            ),
+            const SizedBox(height: 6),
+            _buildContactRow(
+              context: context,
+              icon: Icons.link_rounded,
+              label: 'لینکدین:',
+              value: 'mmshahbazi',
+              copyText: 'https://www.linkedin.com/in/mmshahbazi',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContactRow({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required String value,
+    required String copyText,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey.shade600),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.copy_outlined, size: 16),
+          tooltip: 'کپی در حافظه',
+          visualDensity: VisualDensity.compact,
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: copyText));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$label در کلیپ‌بورد کپی شد.'),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAppAboutCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: AppColors.primary.withAlpha(25),
+                  child: const Icon(Icons.shield_outlined, color: AppColors.primary),
+                ),
+                const SizedBox(width: 10),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'درباره نرم‌افزار Aftersalary',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    Text(
+                      'نگارش ۱.۰.۰ پایدار (Production Release)',
+                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'این نرم‌افزار با معماری ۱۰۰٪ محلی (Local-first) و با تکیه بر استانداردهای بالای مهندسی نرم‌افزار، دقت محاسباتی و حفظ کامل حریم خصوصی کاربر طراحی شده است. هیچ داده‌ای به هیچ سرور خارجی منتقل نشده و کلیه محاسبات به صورت بلادرنگ روی دستگاه اجرا می‌گردد.',
+              style: TextStyle(fontSize: 12, height: 1.6),
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.info_outline, size: 16, color: AppColors.primary),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'فرمول موجودی آزاد: موجودی حساب‌های فعال منهای تعهدات در انتظار دوره مالی جاری.',
+                      style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: AppColors.primary),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

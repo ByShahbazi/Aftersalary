@@ -8,6 +8,7 @@ import 'package:aftersalary/core/services/sms_parser_service.dart';
 import 'package:aftersalary/core/utils/currency_formatter.dart';
 import 'package:aftersalary/core/utils/jalali_helper.dart';
 import 'package:aftersalary/core/widgets/currency_input_field.dart';
+import 'package:aftersalary/features/settings/settings_screen.dart';
 import 'package:aftersalary/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -758,6 +759,36 @@ void main() {
       expect(txs.first.type, 'withdraw');
       expect(txs.first.amountRial, 15000000);
       expect(txs.first.description, contains('تسویه تعهد: اجاره مسکن'));
+
+      await db.close();
+    });
+
+    testWidgets('SettingsScreen displays Mohammad Mahdi Shahbazi developer profile and about card', (tester) async {
+      final db = AppDatabase(NativeDatabase.memory());
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            databaseProvider.overrideWithValue(db),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(
+              body: SettingsScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final devHeaderFinder = find.text('درباره توسعه‌دهنده');
+      await tester.scrollUntilVisible(devHeaderFinder, 500);
+      await tester.pumpAndSettle();
+
+      expect(devHeaderFinder, findsOneWidget);
+      expect(find.text('محمد مهدی شهبازی'), findsOneWidget);
+      expect(find.text('مهندسی نرم‌افزار و مهندس تضمین کیفیت نرم‌افزار'), findsOneWidget);
+      expect(find.text('mmshahbazi85@gmail.com'), findsOneWidget);
+      expect(find.text('@ByShahbazi'), findsOneWidget);
+      expect(find.text('mmshahbazi'), findsOneWidget);
 
       await db.close();
     });
