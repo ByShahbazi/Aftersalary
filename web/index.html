@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="اپلیکیشن مدیریت مالی شخصی و موجودی آزاد بر پایه دوره حقوقی">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Aftersalary">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Aftersalary | مدیریت مالی و موجودی آزاد</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      margin: 0;
+      background-color: #0F1115;
+      font-family: 'Vazirmatn', 'Tahoma', 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+    #loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 50% 35%, #16222F 0%, #0F1115 100%);
+      color: white;
+      z-index: 9999;
+      transition: opacity 0.4s ease-out;
+    }
+    .app-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #00897B, #004D40);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0, 137, 123, 0.4);
+      margin-bottom: 20px;
+    }
+    .app-icon svg {
+      width: 36px;
+      height: 36px;
+      fill: #26A69A;
+    }
+    .app-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      color: #FFFFFF;
+    }
+    .app-subtitle {
+      font-size: 13px;
+      color: #80CBC4;
+      margin-bottom: 28px;
+    }
+    .loading-bar {
+      width: 140px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .loading-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 40%;
+      background: linear-gradient(90deg, #26A69A, #80CBC4);
+      border-radius: 4px;
+      animation: indeterminate 1.2s infinite ease-in-out;
+    }
+    @keyframes indeterminate {
+      0% { left: -40%; width: 40%; }
+      50% { left: 40%; width: 50%; }
+      100% { left: 100%; width: 40%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading-container">
+    <div class="app-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+      </svg>
+    </div>
+    <div class="app-title">Aftersalary</div>
+    <div class="app-subtitle">مدیریت مالی شخصی و موجودی آزاد</div>
+    <div class="loading-bar"></div>
+  </div>
+
+  <script src="flutter_bootstrap.js" async></script>
+  <script>
+    (function () {
+      var dismissed = false;
+      function dismissLoader() {
+        if (dismissed) return;
+        dismissed = true;
+        var loader = document.getElementById('loading-container');
+        if (loader) {
+          loader.style.opacity = '0';
+          loader.style.pointerEvents = 'none';
+          setTimeout(function () {
+            if (loader.parentNode) loader.parentNode.removeChild(loader);
+          }, 350);
+        }
+      }
+
+      window.addEventListener('flutter-first-frame', dismissLoader);
+      document.addEventListener('flutter-first-frame', dismissLoader);
+
+      // Mutation observer to detect when flutter view/glass pane is added to DOM
+      var observer = new MutationObserver(function (mutations) {
+        if (document.querySelector('flutter-view, flt-glass-pane, [flt-renderer]')) {
+          setTimeout(dismissLoader, 400);
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      // Fallback maximum wait time 2.5 seconds
+      setTimeout(dismissLoader, 2500);
+    })();
+  </script>
+</body>
+</html>
