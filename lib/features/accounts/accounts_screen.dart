@@ -118,191 +118,202 @@ class AccountsScreen extends ConsumerWidget {
                       : AppColors.primary;
 
                   return Card(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    elevation: 1,
+                    margin: const EdgeInsets.only(bottom: 14),
+                    elevation: 1.5,
+                    shadowColor: bankColor.withValues(alpha: 0.15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: bankColor.withAlpha(50), width: 1.2),
+                      borderRadius: BorderRadius.circular(18),
+                      side: BorderSide(color: bankColor.withValues(alpha: 0.25), width: 1.2),
                     ),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(18),
                       onTap: () => _showAccountOptions(context, ref, account),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // خط اول: بانک صادر کننده
+                            // سطر ۱: آیکون و نام بانک (بدون لیبل) + نشان عنوان + دکمه گزینه‌ها
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(7),
                                   decoration: BoxDecoration(
-                                    color: bankColor.withAlpha(25),
+                                    color: bankColor.withValues(alpha: 0.12),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(Icons.account_balance, size: 16, color: bankColor),
+                                  child: Icon(Icons.account_balance_rounded, size: 18, color: bankColor),
                                 ),
-                                const SizedBox(width: 8),
-                                const Text(
-                                  'بانک صادر کننده: ',
-                                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: Colors.black54),
-                                ),
+                                const SizedBox(width: 10),
                                 Expanded(
-                                  child: Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: bank?.name ?? account.title,
-                                          style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold, color: bankColor),
-                                        ),
-                                        if (account.title.isNotEmpty && account.title != (bank?.name ?? ''))
-                                          TextSpan(
-                                            text: '  (${account.title})',
-                                            style: TextStyle(fontSize: 11, color: Colors.grey.shade700, fontWeight: FontWeight.normal),
-                                          ),
-                                      ],
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Icon(Icons.more_vert, size: 18, color: Colors.grey.shade400),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-
-                            // خط دوم: نام دارنده کارت
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueGrey.withAlpha(20),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(Icons.person_outline, size: 16, color: Colors.blueGrey),
-                                ),
-                                const SizedBox(width: 8),
-                                const Text(
-                                  'نام دارنده کارت: ',
-                                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: Colors.black54),
-                                ),
-                                Expanded(
-                                  child: Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: (account.ownerName != null && account.ownerName!.trim().isNotEmpty)
-                                              ? account.ownerName!.trim()
-                                              : 'ثبت نشده',
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          bank?.name ?? account.title,
                                           style: TextStyle(
-                                            fontSize: 12.5,
-                                            fontWeight: (account.ownerName != null && account.ownerName!.trim().isNotEmpty)
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                            color: (account.ownerName != null && account.ownerName!.trim().isNotEmpty)
-                                                ? Colors.black87
-                                                : Colors.grey.shade600,
-                                          ),
-                                        ),
-                                        if (account.accountNumber != null && account.accountNumber!.trim().isNotEmpty)
-                                          TextSpan(
-                                            text: '  •  ${account.accountNumber!.trim()}',
-                                            style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
-                                          ),
-                                      ],
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-
-                            // خط سوم: موجودی
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary.withAlpha(20),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(Icons.account_balance_wallet_outlined, size: 16, color: AppColors.primary),
-                                ),
-                                const SizedBox(width: 8),
-                                const Text(
-                                  'موجودی: ',
-                                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: Colors.black54),
-                                ),
-                                Expanded(
-                                  child: Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: CurrencyFormatter.formatTomanFromRial(account.currentBalanceRial),
-                                          style: const TextStyle(
-                                            fontSize: 13.5,
+                                            fontSize: 14.5,
                                             fontWeight: FontWeight.bold,
-                                            color: AppColors.primary,
+                                            color: bankColor,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      if (account.title.isNotEmpty && account.title != (bank?.name ?? '')) ...[
+                                        const SizedBox(width: 8),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius: BorderRadius.circular(6),
+                                            border: Border.all(color: Colors.grey.shade300),
+                                          ),
+                                          child: Text(
+                                            account.title,
+                                            style: TextStyle(fontSize: 11, color: Colors.grey.shade700, fontWeight: FontWeight.w500),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        const TextSpan(text: ' '),
-                                        TextSpan(
-                                          text: '(${CurrencyFormatter.formatRial(account.currentBalanceRial, includeUnit: false)} ریال)',
-                                          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
-                                        ),
                                       ],
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.more_horiz_rounded, size: 20, color: Colors.grey.shade400),
+                                  tooltip: 'عملیات حساب',
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  onPressed: () => _showAccountOptions(context, ref, account),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+
+                            // سطر ۲: آیکون و نام دارنده کارت (بدون لیبل) + کادر شماره کارت
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueGrey.withValues(alpha: 0.1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.person_rounded, size: 18, color: Colors.blueGrey),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    spacing: 8,
+                                    runSpacing: 4,
+                                    children: [
+                                      Text(
+                                        (account.ownerName != null && account.ownerName!.trim().isNotEmpty)
+                                            ? account.ownerName!.trim()
+                                            : 'ثبت نشده',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: (account.ownerName != null && account.ownerName!.trim().isNotEmpty)
+                                              ? FontWeight.w600
+                                              : FontWeight.normal,
+                                          color: (account.ownerName != null && account.ownerName!.trim().isNotEmpty)
+                                              ? Colors.black87
+                                              : Colors.grey.shade500,
+                                        ),
+                                      ),
+                                      if (account.accountNumber != null && account.accountNumber!.trim().isNotEmpty)
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blueGrey.shade50,
+                                            borderRadius: BorderRadius.circular(6),
+                                            border: Border.all(color: Colors.blueGrey.shade100),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(Icons.credit_card_rounded, size: 13, color: Colors.blueGrey.shade600),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                account.accountNumber!.trim(),
+                                                style: TextStyle(fontSize: 11, color: Colors.blueGrey.shade700, fontWeight: FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 10),
 
-                            // خط چهارم: مشمول ازاد
+                            // سطر ۳: آیکون و موجودی حساب (بدون لیبل)
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(7),
                                   decoration: BoxDecoration(
-                                    color: (account.includeInFreeBalance ? Colors.green : Colors.deepOrange).withAlpha(20),
+                                    color: AppColors.primary.withValues(alpha: 0.1),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(
-                                    account.includeInFreeBalance ? Icons.check_circle_outline : Icons.lock_outline,
-                                    size: 16,
-                                    color: account.includeInFreeBalance ? Colors.green.shade700 : Colors.deepOrange,
-                                  ),
+                                  child: const Icon(Icons.account_balance_wallet_rounded, size: 18, color: AppColors.primary),
                                 ),
-                                const SizedBox(width: 8),
-                                const Text(
-                                  'مشمول آزاد: ',
-                                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: Colors.black54),
-                                ),
-                                Flexible(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: account.includeInFreeBalance ? Colors.green.shade50 : Colors.amber.shade50,
-                                      borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(
-                                        color: account.includeInFreeBalance ? Colors.green.shade300 : Colors.orange.shade300,
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    spacing: 8,
+                                    runSpacing: 2,
+                                    children: [
+                                      Text(
+                                        CurrencyFormatter.formatTomanFromRial(account.currentBalanceRial),
+                                        style: const TextStyle(
+                                          fontSize: 16.5,
+                                          fontWeight: FontWeight.w800,
+                                          color: AppColors.primary,
+                                        ),
                                       ),
-                                    ),
-                                    child: Text(
-                                      account.includeInFreeBalance ? 'مشمول در موجودی آزاد' : 'غیرمشمول (پس‌انداز / صندوق)',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                        color: account.includeInFreeBalance ? Colors.green.shade800 : Colors.deepOrange.shade800,
+                                      Text(
+                                        '(${CurrencyFormatter.formatRial(account.currentBalanceRial, includeUnit: false)} ریال)',
+                                        style: TextStyle(fontSize: 11.5, color: Colors.grey.shade600),
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                    ],
                                   ),
                                 ),
                               ],
+                            ),
+                            const SizedBox(height: 10),
+
+                            // سطر ۴: آیکون و نشان وضعیت مشمول/غیرمشمول در موجودی آزاد (بدون لیبل)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: account.includeInFreeBalance ? const Color(0xFFE8F5E9) : const Color(0xFFFFF3E0),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: account.includeInFreeBalance ? const Color(0xFFA5D6A7) : const Color(0xFFFFCC80),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    account.includeInFreeBalance ? Icons.check_circle_rounded : Icons.savings_outlined,
+                                    size: 16,
+                                    color: account.includeInFreeBalance ? const Color(0xFF2E7D32) : const Color(0xFFE65100),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    account.includeInFreeBalance ? 'مشمول در موجودی آزاد' : 'غیرمشمول (پس‌انداز / صندوق)',
+                                    style: TextStyle(
+                                      fontSize: 11.5,
+                                      fontWeight: FontWeight.bold,
+                                      color: account.includeInFreeBalance ? const Color(0xFF1B5E20) : const Color(0xFFBF360C),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

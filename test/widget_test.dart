@@ -821,14 +821,17 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('بانک صادر کننده: '), findsWidgets);
+      // Verify that data is rendered with icons and without static text labels
       expect(find.textContaining(bank.name), findsWidgets);
-      expect(find.text('نام دارنده کارت: '), findsWidgets);
       expect(find.textContaining('محمد شهبازی'), findsWidgets);
-      expect(find.text('موجودی: '), findsWidgets);
       expect(find.textContaining('۲,۵۰۰,۰۰۰ تومان'), findsWidgets);
-      expect(find.text('مشمول آزاد: '), findsWidgets);
       expect(find.textContaining('مشمول در موجودی آزاد'), findsWidgets);
+
+      // Verify static labels are removed
+      expect(find.text('بانک صادر کننده: '), findsNothing);
+      expect(find.text('نام دارنده کارت: '), findsNothing);
+      expect(find.text('موجودی: '), findsNothing);
+      expect(find.text('مشمول آزاد: '), findsNothing);
 
       await db.close();
     });
